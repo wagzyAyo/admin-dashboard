@@ -90,6 +90,26 @@ app.put('/update/:id', async (req, res) => {
     }
 })
 
+
+// delete data on db
+
+app.delete("/delete/:id", async (req, res)=> {
+    try {
+        const {id} = req.params;
+        const result = await schema.findByIdAndDelete(id);
+        if(!result){
+            res.status(404).send({message: "Cant find data"})
+        }
+
+        return res.status(200).send({message: "Data deleted successfully"})
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({message: error.message})
+        
+    }
+})
+
 //connect to db
 mongoose
 .connect(MongodbUri)
