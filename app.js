@@ -60,7 +60,33 @@ app.get("/getdata/:id", async (req, res) => {
         return res.status(200).json(data)
     } catch (error) {
         console.log(error);
-        res.status(500).send({message: error})
+        res.status(500).send({message: error.message})
+    }
+})
+
+// updat data o db
+app.put('/update/:id', async (req, res) => {
+    try {
+        if (
+            !req.body.name ||
+            !req.body.location ||
+            !req.body.description
+        ){
+            res.status(400).send({message: "Send all required fields"})
+        }
+        const {id } = req.params;
+
+        const result = await schema.findByIdAndUpdate(id, req.body)
+
+        if (!result){
+            res.status(404).send({message:"data not found"})
+        }
+
+        return res.status(200).send({message: "data updated successfully!"})
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({message: error.message})
+        
     }
 })
 
