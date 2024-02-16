@@ -2,19 +2,21 @@ const express = require("express")
 const path = require("path")
 const mongoose = require("mongoose")
 const schema = require("./models/model")
+const MongodbUri = require("./config")
 
 require("dotenv").config()
 
 app = express()
 
 const port = 3000
-const uri = process.env.uri;
-const MongodbUri = "mongodb+srv://ola:admin@cluster0.bbiilar.mongodb.net/properties?retryWrites=true&w=majority"
+
 
 
 app.use(express.static(path.join(__dirname, 'static')));
 app.use(express.json())
 
+
+//post to db
 app.post("/addpost", async (req, res)=>{
     try {
         if(
@@ -34,6 +36,18 @@ app.post("/addpost", async (req, res)=>{
     } catch (error) {
         console.log(error);
         res.status(500).send({message: error});
+    }
+})
+
+//get data from db
+
+app.get("/getdata", async (req, res) => {
+    try {
+        const data = await schema.find({})
+        return res.status(200).json(data)
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({message: error})
     }
 })
 
