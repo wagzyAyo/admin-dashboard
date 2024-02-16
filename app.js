@@ -50,6 +50,19 @@ app.get("/getdata", async (req, res) => {
         res.status(500).send({message: error})
     }
 })
+//get data by id from db
+
+app.get("/getdata/:id", async (req, res) => {
+    try {
+        const {id} = req.params;
+
+        const data = await schema.findById(id)
+        return res.status(200).json(data)
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({message: error})
+    }
+})
 
 //connect to db
 mongoose
