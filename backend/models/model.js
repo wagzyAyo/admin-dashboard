@@ -6,6 +6,14 @@ const schema = mongoose.Schema(
             type: String,
             require: true,
         },
+        amount: {
+            type: Number,
+            require: true
+        },
+        size: {
+            type: String,
+            require: true
+        },
         location: {
             type: String,
             require: true,
