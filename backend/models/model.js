@@ -18,6 +18,10 @@ const schema = mongoose.Schema(
             type: String,
             require: true,
         },
+        short: {
+            type: String,
+            require: true,
+        },
         description: {
             type: String,
             require: true,
