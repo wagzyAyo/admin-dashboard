@@ -3,7 +3,8 @@ const path = require("path")
 const mongoose = require("mongoose")
 const schema = require("./models/model")
 const MongodbUri = require("./config")
-const ejs = require('ejs')
+const ejs = require('ejs');
+const bodyParser = require("body-parser")
 
 require("dotenv").config()
 
@@ -14,7 +15,8 @@ const port = 3000
 
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.json());
+app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
 
@@ -38,13 +40,15 @@ app.get("/getdata", async (req, res) => {
 
 //post to db
 app.post("/addpost", async (req, res)=>{
-    const tag = req.body.tag;
+    let tag = req.body.tag;
     const name = req.body.name;
     const location = req.body.location;
     const size = req.body.size;
     const short = req.body.short;
     const amount = req.body.amount;
     const description = req.body.description;
+
+    console.log(tag)
     try {
         if(
             !name ||!size || !location || !short 
@@ -62,8 +66,9 @@ app.post("/addpost", async (req, res)=>{
                 amount: amount,
                 description: description,
             }
-            const property = await schema.create(newProperty)
-            return res.status(200).send(property)
+            const property = await schema.create(newProperty);
+            property.save()
+            res.redirect('/')
     } catch (error) {
         console.log(error);
         res.status(500).send({message: error});

@@ -8,7 +8,7 @@ const schema = mongoose.Schema(
             require: true,
         },
         amount: {
-            type: Number,
+            type: String,
             require: true
         },
         size: {
