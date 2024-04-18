@@ -3,6 +3,7 @@ const path = require("path")
 const mongoose = require("mongoose")
 const schema = require("./models/model")
 const MongodbUri = require("./config")
+const ejs = require('ejs')
 
 require("dotenv").config()
 
@@ -13,8 +14,13 @@ const port = 3000
 
 
 app.use(express.static(path.join(__dirname, 'static')));
-app.use(express.json())
+app.use(express.json());
+app.set('view engine', 'ejs');
 
+
+app.get('/', (req, res)=>{
+    res.render('index')
+})
 
 //post to db
 app.post("/addpost", async (req, res)=>{
