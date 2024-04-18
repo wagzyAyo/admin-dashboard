@@ -35,6 +35,15 @@ app.get("/getdata", async (req, res) => {
         console.log(error);
         res.status(500).send({message: error})
     }
+});
+
+app.get("/sales", async (req, res)=>{
+    try{
+        const data = await schema.find({tag: sales});
+        res.render('sales', {salesData: data})
+    } catch (err){
+        res.status(500).send({message: err})
+    }
 })
 
 
