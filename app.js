@@ -20,22 +20,33 @@ app.set('view engine', 'ejs');
 
 app.get('/', (req, res)=>{
     res.render('index')
-})
+});
+
+
 
 //post to db
 app.post("/addpost", async (req, res)=>{
+    const name = req.body.name;
+    const location = req.body.location;
+    const size = req.body.size;
+    const short = req.body.short;
+    const amount = req.body.amount;
+    const description = req.body.description;
     try {
         if(
-            !req.body.name ||
-            !req.body.location ||
-            !req.body.description
+            !name ||!size || !location || !short 
+            || !amount||!description
             ){
-               return res.status(400).send({message: "Send all required fields. Name, Location and description"})
+               return res.status(400).send({message: 
+                "Send all required fields. Name, Location, description, amount, size"})
             };
             const newProperty = {
-                name: req.body.name,
-                location: req.body.location,
-                description: req.body.location
+                name: name,
+                location: location,
+                short: short,
+                size: size,
+                amount: amount,
+                description: description,
             }
             const property = await schema.create(newProperty)
             return res.status(200).send(property)
@@ -70,13 +81,19 @@ app.get("/getdata/:id", async (req, res) => {
     }
 })
 
-// updat data o db
+// updat data on db
 app.put('/update/:id', async (req, res) => {
+    const name = req.body.name;
+    const location = req.body.location;
+    const size = req.body.size;
+    const short = req.body.short;
+    const amount = req.body.amount;
+    const description = req.body.description;
+
     try {
         if (
-            !req.body.name ||
-            !req.body.location ||
-            !req.body.description
+            !!name ||!size || !location || !short 
+            || !amount||!description
         ){
             res.status(400).send({message: "Send all required fields"})
         }
@@ -85,7 +102,8 @@ app.put('/update/:id', async (req, res) => {
         const result = await schema.findByIdAndUpdate(id, req.body)
 
         if (!result){
-            res.status(404).send({message:"data not found"})
+            res.status(404).send({message:"data not found"});
+            return
         }
 
         return res.status(200).send({message: "data updated successfully!"})
