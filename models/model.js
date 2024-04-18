@@ -2,6 +2,7 @@ const mongoose = require("mongoose")
 
 const schema = mongoose.Schema(
     {
+        tag: String,
         name:{
             type: String,
             require: true,

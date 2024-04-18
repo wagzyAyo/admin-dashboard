@@ -13,7 +13,7 @@ const port = 3000
 
 
 
-app.use(express.static(path.join(__dirname, 'static')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.set('view engine', 'ejs');
 
@@ -23,9 +23,22 @@ app.get('/', (req, res)=>{
 });
 
 
+//get data from db
+
+app.get("/getdata", async (req, res) => {
+    try {
+        const data = await schema.find({})
+        return res.status(200).json(data)
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({message: error})
+    }
+})
+
 
 //post to db
 app.post("/addpost", async (req, res)=>{
+    const tag = req.body.tag;
     const name = req.body.name;
     const location = req.body.location;
     const size = req.body.size;
@@ -41,6 +54,7 @@ app.post("/addpost", async (req, res)=>{
                 "Send all required fields. Name, Location, description, amount, size"})
             };
             const newProperty = {
+                tag: tag,
                 name: name,
                 location: location,
                 short: short,
@@ -56,17 +70,7 @@ app.post("/addpost", async (req, res)=>{
     }
 })
 
-//get data from db
 
-app.get("/getdata", async (req, res) => {
-    try {
-        const data = await schema.find({})
-        return res.status(200).json(data)
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({message: error})
-    }
-})
 //get data by id from db
 
 app.get("/getdata/:id", async (req, res) => {
