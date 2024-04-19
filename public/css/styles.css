@@ -19,20 +19,35 @@
 	padding-bottom: 60px;
 }
 
+.box{
+    margin-top: 20px;
+    width:300px;
+    height: 300px;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 15px;
+    background-color: rgb(226, 226, 226) ;
+}
+
+.box .intro{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0 20px;
+}
+
 .footer {
-	position: relative;
+	position: absolute;
 	text-align: center;
-	bottom: 0;
+	bottom: 100;
 	width: 100%;
 	height: 60px;
 	background-color: #1abc9c;
-    text-align: center;
 }
 
 .footer p {
-    display: grid;
-    margin: auto 0;
 	font-size: 12px;
     color: #fff;
-    place-content: center;
 }

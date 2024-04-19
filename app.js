@@ -12,7 +12,7 @@ app = express()
 
 const port = 3000
 
-
+mongoose.connect(MongodbUri);
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({extended:true}))
@@ -39,12 +39,14 @@ app.get("/getdata", async (req, res) => {
 
 app.get("/sales", async (req, res)=>{
     try{
-        const data = await schema.find({tag: sales});
+        const data = await schema.find({tag: "sale"});
+        console.log(data)
         res.render('sales', {salesData: data})
     } catch (err){
-        res.status(500).send({message: err})
+        console.log("Error occured", err)
+        res.status(500).send({message: "An error occurred while processing your request."})
     }
-})
+});
 
 
 //post to db
@@ -153,16 +155,6 @@ app.delete("/delete/:id", async (req, res)=> {
 })
 
 //connect to db
-mongoose
-.connect(MongodbUri)
-.then(() => {
-    console.log("App connected to database");
-    app.listen(port, () => {
-        console.log(`App listening on port ${port}`)
-    })
-
+app.listen(port, ()=>{
+    console.log(`App listening on port ${port}`)
 })
-.catch((error) => {
-    console.log(error)
-})
-
