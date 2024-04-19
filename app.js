@@ -59,6 +59,17 @@ app.get("/lease", async (req, res)=>{
     }
 });
 
+app.get("/rent", async (req, res)=>{
+    try{
+        const data = await schema.find({tag: "rent"});
+        console.log(data)
+        res.render('sales', {Data: data})
+    } catch (err){
+        console.log("Error occured", err)
+        res.status(500).send({message: "An error occurred while processing your request."})
+    }
+});
+
 
 //post to db
 app.post("/addpost", async (req, res)=>{
