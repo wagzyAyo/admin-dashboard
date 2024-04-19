@@ -5,6 +5,7 @@ const schema = require("./models/model")
 const MongodbUri = require("./config")
 const ejs = require('ejs');
 const bodyParser = require("body-parser")
+const axios = require('axios');
 
 require("dotenv").config()
 
@@ -31,7 +32,7 @@ app.get('/', (req, res)=>{
 
 //get data from db
 
-app.get("/getdata", async (req, res) => {
+app.get("/api/alldata", async (req, res) => {
     try {
         const data = await schema.find({})
         return res.status(200).json(data)
@@ -45,6 +46,7 @@ app.get("/sales", async (req, res)=>{
     try{
         const data = await schema.find({tag: "sale"});
         //console.log(data)
+     
         res.render('sales', {Data: data})
     } catch (err){
         console.log("Error occured", err)
@@ -84,11 +86,8 @@ app.post("/addpost", async (req, res)=>{
     const short = req.body.short;
     const amount = req.body.amount;
     const description = req.body.description;
-    const imageURLS = req.body.imageUrls.split(',');
+    const imageURLS = req.body.imageUrls.split(',').map(url => url.trim());
 
-    
-
-    //console.log(tag)
 
     try {
         if(
