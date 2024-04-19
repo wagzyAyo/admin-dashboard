@@ -41,7 +41,18 @@ app.get("/sales", async (req, res)=>{
     try{
         const data = await schema.find({tag: "sale"});
         console.log(data)
-        res.render('sales', {salesData: data})
+        res.render('sales', {Data: data})
+    } catch (err){
+        console.log("Error occured", err)
+        res.status(500).send({message: "An error occurred while processing your request."})
+    }
+});
+
+app.get("/lease", async (req, res)=>{
+    try{
+        const data = await schema.find({tag: "lease"});
+        console.log(data)
+        res.render('sales', {Data: data})
     } catch (err){
         console.log("Error occured", err)
         res.status(500).send({message: "An error occurred while processing your request."})
