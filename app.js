@@ -84,7 +84,8 @@ app.post("/addpost", async (req, res)=>{
     const short = req.body.short;
     const amount = req.body.amount;
     const description = req.body.description;
-    const imageURLS = req.body.imageUrls;
+    const imageURLS = req.body.imageUrls.split(',');
+
     
 
     //console.log(tag)
