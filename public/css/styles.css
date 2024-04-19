@@ -18,9 +18,6 @@
     margin-top: 20px;
 }
 
-.footer-padding {
-	padding-bottom: 60px;
-}
 
 .box{
     margin-top: 20px;
@@ -30,6 +27,7 @@
     border-radius: 20px;
     padding: 10px 15px;
     background-color: rgb(226, 226, 226) ;
+    margin-bottom: 20px;
 }
 
 .box .intro{
@@ -42,12 +40,13 @@
 }
 
 .footer {
-	position: fixed;
+	position: relative;
 	text-align: center;
 	bottom: 0;
 	width: 100%;
 	height: 60px;
 	background-color: #1abc9c;
+    place-content: center;
 }
 
 .footer p {

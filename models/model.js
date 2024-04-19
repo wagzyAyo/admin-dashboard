@@ -26,7 +26,8 @@ const schema = mongoose.Schema(
         description: {
             type: String,
             require: true,
-        }
+        },
+        imageURL: []
     },
     {
         timestamps: true,

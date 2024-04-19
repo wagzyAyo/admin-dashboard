@@ -12,7 +12,11 @@ app = express()
 
 const port = 3000
 
-mongoose.connect(MongodbUri);
+mongoose.connect(MongodbUri)
+.then(console.log('connected to database'))
+.catch(err=>{
+    console.log(`Connection to database fail ${err}`)
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({extended:true}))
@@ -40,7 +44,7 @@ app.get("/getdata", async (req, res) => {
 app.get("/sales", async (req, res)=>{
     try{
         const data = await schema.find({tag: "sale"});
-        console.log(data)
+        //console.log(data)
         res.render('sales', {Data: data})
     } catch (err){
         console.log("Error occured", err)
@@ -51,7 +55,7 @@ app.get("/sales", async (req, res)=>{
 app.get("/lease", async (req, res)=>{
     try{
         const data = await schema.find({tag: "lease"});
-        console.log(data)
+        //console.log(data)
         res.render('sales', {Data: data})
     } catch (err){
         console.log("Error occured", err)
@@ -62,7 +66,7 @@ app.get("/lease", async (req, res)=>{
 app.get("/rent", async (req, res)=>{
     try{
         const data = await schema.find({tag: "rent"});
-        console.log(data)
+        //console.log(data)
         res.render('sales', {Data: data})
     } catch (err){
         console.log("Error occured", err)
@@ -80,6 +84,7 @@ app.post("/addpost", async (req, res)=>{
     const short = req.body.short;
     const amount = req.body.amount;
     const description = req.body.description;
+    const [imageURLS] = req.body.imageUrls;
 
     console.log(tag)
     try {
@@ -98,6 +103,7 @@ app.post("/addpost", async (req, res)=>{
                 size: size,
                 amount: amount,
                 description: description,
+                imageURL: imageURLS
             }
             const property = await schema.create(newProperty);
             property.save()

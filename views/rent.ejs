@@ -2,6 +2,13 @@
 <% Data.forEach(data =>{ %>
     <div class="box">
         <div class="intro">
+            <div>
+                <!-- <% for (let i = 0; i < data.imageURL.length; i++){ %>
+                    <img src="<%=data.imageURL[i] %>" alt="">
+               <% } %> -->
+               
+               <img src="<%= data.imageURL %>" alt="">
+            </div>
             <b><p><%= data.name %>||</p></b>
             <p><%= data.location %>||</p>
             <p><%= data.size %>||</p>
