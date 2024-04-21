@@ -64,10 +64,13 @@ left: 65%;
     transition: color 0.5s ease-in-out;
 }
 
-.space .fa-solid:hover{
+.space .fa-pen:hover{
     color:#1abc9c;
 } 
 
+.space .fa-trash:hover{
+    color:#f10b0b;
+}
 
 .footer {
 	position: relative;

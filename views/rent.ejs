@@ -1,8 +1,19 @@
 <%- include('partials/header') %>
 <% Data.forEach(data =>{ %>
-    <div class="box">
+    <div class="box card">
+        <div class="icons">
+            <div class="space">
+                <div>
+                    <i class="fa-solid fa-pen"></i>
+                </div>
+                <div>
+                    <i class="fa-solid fa-trash"></i>
+                </div>
+                
+            </div>
+        </div>
+        
         <div class="intro">
-            
             <b><p><%= data.name %>||</p></b>
             <p><%= data.location %>||</p>
             <p><%= data.size %>||</p>
