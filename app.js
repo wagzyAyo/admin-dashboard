@@ -192,9 +192,9 @@ app.get("/getdata/:id", async (req, res) => {
 
 // delete data on db
 
-app.delete("/delete/:id", async (req, res)=> {
+app.post("/delete/:id", async (req, res)=> {
     try {
-        const {id} = req.params;
+        const id = req.params.id;
         const result = await schema.findByIdAndDelete(id);
         if(!result){
             res.status(404).send({message: "Cant find data"})

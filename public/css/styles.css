@@ -59,7 +59,10 @@ left: 65%;
     align-items: center;
     justify-content: space-around;
 }
-
+.icon-btn{
+    border: none;
+    background: none;
+}
 .space .fa-solid{
     transition: color 0.5s ease-in-out;
 }
