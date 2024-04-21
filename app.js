@@ -58,7 +58,7 @@ app.get("/lease", async (req, res)=>{
     try{
         const data = await schema.find({tag: "lease"});
         //console.log(data)
-        res.render('sales', {Data: data})
+        res.render('lease', {Data: data})
     } catch (err){
         console.log("Error occured", err)
         res.status(500).send({message: "An error occurred while processing your request."})
@@ -69,7 +69,7 @@ app.get("/rent", async (req, res)=>{
     try{
         const data = await schema.find({tag: "rent"});
         //console.log(data)
-        res.render('sales', {Data: data})
+        res.render('rent', {Data: data})
     } catch (err){
         console.log("Error occured", err)
         res.status(500).send({message: "An error occurred while processing your request."})
@@ -114,22 +114,21 @@ app.post("/addpost", async (req, res)=>{
         console.log(error);
         res.status(500).send({message: error});
     }
-})
+});
 
-
-//get data by id from db
-
-app.get("/getdata/:id", async (req, res) => {
-    try {
-        const {id} = req.params;
-
-        const data = await schema.findById(id)
-        return res.status(200).json(data)
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({message: error.message})
+//Edit Data
+app.get("/edit/:id", async(req,res)=>{
+    const id = req.params.id
+    try{
+        const data = await schema.find({_id: id})
+        res.render('edit', {Data: data})
+        console.log(data)
     }
-})
+    catch(err){
+        console.log({message: err})
+    }
+});
+
 
 // updat data on db
 app.put('/update/:id', async (req, res) => {
@@ -147,7 +146,7 @@ app.put('/update/:id', async (req, res) => {
         ){
             res.status(400).send({message: "Send all required fields"})
         }
-        const {id } = req.params;
+        const {id} = req.params;
 
         const result = await schema.findByIdAndUpdate(id, req.body)
 
@@ -162,7 +161,22 @@ app.put('/update/:id', async (req, res) => {
         res.status(500).send({message: error.message})
         
     }
-})
+});
+
+
+//get data by id from db
+
+app.get("/getdata/:id", async (req, res) => {
+    try {
+        const {id} = req.params;
+
+        const data = await schema.findById(id)
+        return res.status(200).json(data)
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({message: error.message})
+    }
+});
 
 
 // delete data on db

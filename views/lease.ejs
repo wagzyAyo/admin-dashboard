@@ -1,10 +1,11 @@
 <%- include('partials/header') %>
+<h1><%= Data[0].tag%></h1>
 <% Data.forEach(data =>{ %>
     <div class="box card">
         <div class="icons">
             <div class="space">
                 <div>
-                    <i class="fa-solid fa-pen"></i>
+                    <a href="/edit/<%=data._id%>"><i class="fa-solid fa-pen"></i></a>
                 </div>
                 <div>
                     <i class="fa-solid fa-trash"></i>
