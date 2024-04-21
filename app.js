@@ -5,7 +5,6 @@ const schema = require("./models/model")
 const MongodbUri = require("./config")
 const ejs = require('ejs');
 const bodyParser = require("body-parser")
-const axios = require('axios');
 
 require("dotenv").config()
 
@@ -122,7 +121,6 @@ app.get("/edit/:id", async(req,res)=>{
     try{
         const data = await schema.find({_id: id})
         res.render('edit', {Data: data})
-        console.log(data)
     }
     catch(err){
         console.log({message: err})
@@ -130,32 +128,45 @@ app.get("/edit/:id", async(req,res)=>{
 });
 
 
-// updat data on db
-app.put('/update/:id', async (req, res) => {
+// update data on db
+app.post('/update/:id', async (req, res) => {
+    let tag = req.body.tag;
     const name = req.body.name;
     const location = req.body.location;
     const size = req.body.size;
     const short = req.body.short;
     const amount = req.body.amount;
     const description = req.body.description;
+    const imageURLS = req.body.imageUrls.split(',').map(url => url.trim());
 
     try {
         if (
-            !!name ||!size || !location || !short 
+            !name ||!size || !location || !short 
             || !amount||!description
         ){
             res.status(400).send({message: "Send all required fields"})
         }
-        const {id} = req.params;
+        const id = req.params.id;
+        const update = {
+            tag: tag,
+            name: name,
+            location: location,
+            short: short,
+            size: size,
+            amount: amount,
+            description: description,
+            imageURL: imageURLS
+        };
+        console.log(update)
 
-        const result = await schema.findByIdAndUpdate(id, req.body)
+        const result = await schema.findByIdAndUpdate(id, update)
 
         if (!result){
             res.status(404).send({message:"data not found"});
             return
         }
 
-        return res.status(200).send({message: "data updated successfully!"})
+        res.redirect('/sales')
     } catch (error) {
         console.log(error);
         res.status(500).send({message: error.message})
