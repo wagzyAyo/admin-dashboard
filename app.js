@@ -166,7 +166,7 @@ app.post('/update/:id', async (req, res) => {
             return
         }
 
-        res.redirect('/sales')
+        res.redirect('/')
     } catch (error) {
         console.log(error);
         res.status(500).send({message: error.message})
@@ -200,7 +200,7 @@ app.post("/delete/:id", async (req, res)=> {
             res.status(404).send({message: "Cant find data"})
         }
 
-        return res.status(200).send({message: "Data deleted successfully"})
+        res.redirect('/')
         
     } catch (error) {
         console.log(error)
