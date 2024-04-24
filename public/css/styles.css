@@ -75,6 +75,27 @@ left: 65%;
     color:#f10b0b;
 }
 
+.center{
+    width: 300px;
+    height: auto;
+    border-radius: 30px;
+    background-color: aliceblue;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 40px;
+}
+.center .display{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+input.auth{
+    width:200px;
+    height:25px;
+    padding: 5px 10px;
+}
+
+
 .footer {
 	position: relative;
 	text-align: center;
