@@ -17,7 +17,6 @@ app = express()
 
 const port = 3000
 
-const saltRounds = 10;
 
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -39,7 +38,7 @@ mongoose.connect(MongodbUri)
 });
 
 const userSchema = mongoose.Schema({
-    userMail: String,
+    username: String,
     password: String
 });
 userSchema.plugin(passportLocalMongoose)
@@ -50,23 +49,30 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.get('/', (req, res)=>{
+    //console.log(req.session.passport)
+    //console.log(req.isAuthenticated())
     if(req.isAuthenticated()){
-        res.render('index')
+        res.redirect('/home')
     }else{
-        res.redirect('/login')
+        res.render('login')
     }
    
 });
 
-app.get('/login', (req, res)=>{
-    res.render('login')
+app.get('/home', (req, res)=>{
+    if(req.isAuthenticated()){
+        res.render('index')
+    } else{
+        res.render('login')
+    }
+    
 })
 
 app.get('/signup', (req,res)=>{
     res.render('signup')
 });
 
-app.post('/login', (req, res)=>{
+app.post('/', (req, res)=>{
     const user = new User({
         username : req.body.usermail,
         password : req.body.password
@@ -79,6 +85,7 @@ app.post('/login', (req, res)=>{
             })
         }else{
             console.log("Error loging in user: " + err)
+            res.redirect('/')
         }
     })
 })
@@ -199,6 +206,7 @@ app.get("/edit/:id", async(req,res)=>{
 
 // update data on db
 app.post('/update/:id', async (req, res) => {
+    if(req.isAuthenticated()){
     let tag = req.body.tag;
     const name = req.body.name;
     const location = req.body.location;
@@ -241,6 +249,10 @@ app.post('/update/:id', async (req, res) => {
         res.status(500).send({message: error.message})
         
     }
+    }else{
+        res.redirect('/login')
+    }
+    
 });
 
 
