@@ -28,6 +28,10 @@ app.get('/', (req, res)=>{
     res.render('login')
 });
 
+app.get('/signup', (req,res)=>{
+    res.render('signup')
+})
+
 
 //get data from db
 
