@@ -5,6 +5,11 @@ const schema = require("./models/model")
 const MongodbUri = require("./config")
 const ejs = require('ejs');
 const bodyParser = require("body-parser")
+const session = require('express-session')
+const passport = require('passport')
+const passportLocalMongoose = require('passport-local-mongoose')
+
+
 
 require("dotenv").config()
 
@@ -12,24 +17,84 @@ app = express()
 
 const port = 3000
 
+const saltRounds = 10;
+
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.json());
+app.set('view engine', 'ejs');
+app.use(session({
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: false,
+}));
+app.use(passport.initialize());
+app.use(passport.session())
+
 mongoose.connect(MongodbUri)
 .then(console.log('connected to database'))
 .catch(err=>{
     console.log(`Connection to database fail ${err}`)
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.urlencoded({extended:true}))
-app.use(bodyParser.json());
-app.set('view engine', 'ejs');
+const userSchema = mongoose.Schema({
+    userMail: String,
+    password: String
+});
+userSchema.plugin(passportLocalMongoose)
 
+const User = mongoose.model('user', userSchema);
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.get('/', (req, res)=>{
-    res.render('login')
+    if(req.isAuthenticated()){
+        res.render('index')
+    }else{
+        res.redirect('/login')
+    }
+   
 });
+
+app.get('/login', (req, res)=>{
+    res.render('login')
+})
 
 app.get('/signup', (req,res)=>{
     res.render('signup')
+});
+
+app.post('/login', (req, res)=>{
+    const user = new User({
+        username : req.body.usermail,
+        password : req.body.password
+    })
+    
+    req.login(user, (err)=>{
+        if (!err){
+            passport.authenticate('local')(req, res, ()=>{
+                res.redirect('/')
+            })
+        }else{
+            console.log("Error loging in user: " + err)
+        }
+    })
+})
+
+app.post('/signup', (req,res)=>{
+    const mail = req.body.usermail;
+    const password = req.body.password;
+    User.register({username: mail}, password, (err, user)=>{
+        if (!err){
+            passport.authenticate('local')(req, res, ()=>{
+                res.redirect('/')
+            })
+        }else{
+            console.log("Error registring new user: "+ err)
+        }
+    })
 })
 
 
