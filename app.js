@@ -81,9 +81,10 @@ app.post('/', (req, res)=>{
     req.login(user, (err)=>{
         if (!err){
             passport.authenticate('local')(req, res, ()=>{
-                res.redirect('/')
+                res.redirect('/home')
             })
         }else{
+            alert('Email or password not correct')
             console.log("Error loging in user: " + err)
             res.redirect('/')
         }
@@ -107,15 +108,6 @@ app.post('/signup', (req,res)=>{
 
 //get data from db
 
-app.get("/api/alldata", async (req, res) => {
-    try {
-        const data = await schema.find({})
-        return res.status(200).json(data)
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({message: error})
-    }
-});
 
 app.get("/sales", async (req, res)=>{
     try{
@@ -184,7 +176,7 @@ app.post("/addpost", async (req, res)=>{
             }
             const property = await schema.create(newProperty);
             property.save()
-            res.redirect('/')
+            res.redirect('/home')
     } catch (error) {
         console.log(error);
         res.status(500).send({message: error});
@@ -193,6 +185,7 @@ app.post("/addpost", async (req, res)=>{
 
 //Edit Data
 app.get("/edit/:id", async(req,res)=>{
+    if(req.isAuthenticated()){
     const id = req.params.id
     try{
         const data = await schema.find({_id: id})
@@ -201,12 +194,15 @@ app.get("/edit/:id", async(req,res)=>{
     catch(err){
         console.log({message: err})
     }
+} else{
+    res.redirect('/')
+}
 });
 
 
 // update data on db
 app.post('/update/:id', async (req, res) => {
-    if(req.isAuthenticated()){
+    
     let tag = req.body.tag;
     const name = req.body.name;
     const location = req.body.location;
@@ -243,14 +239,11 @@ app.post('/update/:id', async (req, res) => {
             return
         }
 
-        res.redirect('/')
+        res.redirect('/home')
     } catch (error) {
         console.log(error);
         res.status(500).send({message: error.message})
         
-    }
-    }else{
-        res.redirect('/login')
     }
     
 });
@@ -288,7 +281,53 @@ app.post("/delete/:id", async (req, res)=> {
         res.status(500).send({message: error.message})
         
     }
-})
+});
+
+
+//API
+app.get("/api/alldata", async (req, res) => {
+    try {
+        const data = await schema.find({})
+        return res.status(200).json(data)
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({message: error})
+    }
+});
+app.get("/api/sales", async (req, res)=>{
+    try{
+        const data = await schema.find({tag: "sale"});
+        //console.log(data)
+     
+        return res.status(200).json(data)
+    } catch (err){
+        console.log("Error occured", err)
+        res.status(500).send({message: "An error occurred while processing your request."})
+    }
+});
+
+app.get("/api/lease", async (req, res)=>{
+    try{
+        const data = await schema.find({tag: "lease"});
+        //console.log(data)
+        return res.status(200).json(data)
+    } catch (err){
+        console.log("Error occured", err)
+        res.status(500).send({message: "An error occurred while processing your request."})
+    }
+});
+
+app.get("/api/rent", async (req, res)=>{
+    try{
+        const data = await schema.find({tag: "rent"});
+        //console.log(data)
+        return res.status(200).json(data)
+    } catch (err){
+        console.log("Error occured", err)
+        res.status(500).send({message: "An error occurred while processing your request."})
+    }
+});
+
 
 //connect to db
 app.listen(port, ()=>{
