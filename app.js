@@ -5,6 +5,8 @@ const schema = require("./models/model")
 const MongodbUri = require("./config")
 const ejs = require('ejs');
 const bodyParser = require("body-parser")
+const bcrypt = require('bcryptjs')
+const jwt =require('jsonwebtoken')
 const session = require('express-session')
 const passport = require('passport')
 const passportLocalMongoose = require('passport-local-mongoose')
@@ -81,6 +83,7 @@ app.post('/', (req, res)=>{
     req.login(user, (err)=>{
         if (!err){
             passport.authenticate('local')(req, res, ()=>{
+                alert("Login successful")
                 res.redirect('/home')
             })
         }else{
