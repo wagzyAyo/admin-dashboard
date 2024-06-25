@@ -7,9 +7,10 @@ const ejs = require('ejs');
 const bodyParser = require("body-parser")
 const bcrypt = require('bcryptjs')
 const jwt =require('jsonwebtoken')
-const session = require('express-session')
-const passport = require('passport')
-const passportLocalMongoose = require('passport-local-mongoose')
+const authenticate = require('./models/token')
+const user = require('./models/user')
+const authToken = require('./models/auth')
+
 
 
 
@@ -25,13 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
-app.use(session({
-    secret: process.env.SECRET,
-    resave: false,
-    saveUninitialized: false,
-}));
-app.use(passport.initialize());
-app.use(passport.session())
+
 
 mongoose.connect(MongodbUri)
 .then(console.log('connected to database'))
@@ -39,18 +34,9 @@ mongoose.connect(MongodbUri)
     console.log(`Connection to database fail ${err}`)
 });
 
-const userSchema = mongoose.Schema({
-    username: String,
-    password: String
-});
-userSchema.plugin(passportLocalMongoose)
 
-const User = mongoose.model('user', userSchema);
-passport.use(User.createStrategy());
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
 
-app.get('/', (req, res)=>{
+app.get('/', authenticate,  (req, res)=>{
     //console.log(req.session.passport)
     //console.log(req.isAuthenticated())
     if(req.isAuthenticated()){
@@ -75,37 +61,36 @@ app.get('/signup', (req,res)=>{
 });
 
 app.post('/', (req, res)=>{
-    const user = new User({
+    const user = new userModel({
         username : req.body.usermail,
         password : req.body.password
     })
     
-    req.login(user, (err)=>{
-        if (!err){
-            passport.authenticate('local')(req, res, ()=>{
-                alert("Login successful")
-                res.redirect('/home')
-            })
-        }else{
-            alert('Email or password not correct')
-            console.log("Error loging in user: " + err)
-            res.redirect('/')
-        }
-    })
+   
 })
 
-app.post('/signup', (req,res)=>{
+app.post('/signup', async (req,res)=>{
     const mail = req.body.usermail;
     const password = req.body.password;
-    User.register({username: mail}, password, (err, user)=>{
-        if (!err){
-            passport.authenticate('local')(req, res, ()=>{
-                res.redirect('/')
-            })
-        }else{
-            console.log("Error registring new user: "+ err)
-        }
-    })
+    
+    if (!mail || !password){
+        res.status(401).json({message: 'provide mail and password fields'})
+    }
+    try {
+        const SALT = parsInt(process.env.SALT);
+        const newPassword =  bcrypt.hash(SALT, password);
+
+        const newAdmin = new userModelr({
+            mail,
+            password: newPassword
+        });
+
+        await newAdmin.save();
+        authToken(res, newAdmin._id)
+
+    } catch (err) {
+        res.status(401).json({message: 'Error creating user, duplicate email'})
+    }
 })
 
 
