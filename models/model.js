@@ -27,7 +27,10 @@ const schema = mongoose.Schema(
             type: String,
             require: true,
         },
-        imageURL: []
+        imageURL: {
+            type: String,
+            require: true,
+        }
     },
     {
         timestamps: true,

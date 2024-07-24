@@ -155,7 +155,7 @@ app.post("/addpost", async (req, res)=>{
     const short = req.body.short;
     const amount = req.body.amount;
     const description = req.body.description;
-    const imageURLS = req.body.imageUrls.split(',').map(url => url.trim());
+    const imageURLS = req.body.imageUrls;
 
 
     try {
@@ -212,7 +212,7 @@ app.post('/update/:id', async (req, res) => {
     const short = req.body.short;
     const amount = req.body.amount;
     const description = req.body.description;
-    const imageURLS = req.body.imageUrls.split(',').map(url => url.trim());
+    const imageURLS = req.body.imageUrls;
 
     try {
         if (
