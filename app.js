@@ -8,6 +8,7 @@ const bodyParser = require("body-parser")
 const session = require('express-session')
 const passport = require('passport')
 const passportLocalMongoose = require('passport-local-mongoose')
+const cors = require("cors")
 
 
 
@@ -29,7 +30,8 @@ app.use(session({
     saveUninitialized: false,
 }));
 app.use(passport.initialize());
-app.use(passport.session())
+app.use(passport.session());
+app.use(cors());
 
 mongoose.connect(MongodbUri)
 .then(console.log('connected to database'))
@@ -294,6 +296,8 @@ app.get("/api/alldata", async (req, res) => {
         res.status(500).send({message: error})
     }
 });
+
+
 app.get("/api/sales", async (req, res)=>{
     try{
         const data = await schema.find({tag: "sale"});
@@ -302,7 +306,7 @@ app.get("/api/sales", async (req, res)=>{
         return res.status(200).json(data)
     } catch (err){
         console.log("Error occured", err)
-        res.status(500).send({message: "An error occurred while processing your request."})
+        return res.status(500).send({message: "An error occurred while processing your request."})
     }
 });
 
