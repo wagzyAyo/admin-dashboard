@@ -290,10 +290,11 @@ app.post("/delete/:id", async (req, res)=> {
 app.get("/api/alldata", async (req, res) => {
     try {
         const data = await schema.find({})
-        return res.status(200).json(data)
+        let lastSix = data.slice(-6).reverse()
+        return res.status(200).json(lastSix)
     } catch (error) {
         console.log(error);
-        res.status(500).send({message: error})
+        return res.status(500).send({message: error})
     }
 });
 
