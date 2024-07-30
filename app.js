@@ -302,9 +302,15 @@ app.get("/api/alldata", async (req, res) => {
 app.get("/api/sales", async (req, res)=>{
     try{
         const data = await schema.find({tag: "sale"});
-        //console.log(data)
+        //console.log(data);
+        const modifiedData = data.map(item =>{
+            return{
+                ...item._doc,
+                short: item.short.slice(0, 101)
+            }
+        })
      
-        return res.status(200).json(data)
+        return res.status(200).json(modifiedData)
     } catch (err){
         console.log("Error occured", err)
         return res.status(500).send({message: "An error occurred while processing your request."})
