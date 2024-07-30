@@ -325,8 +325,15 @@ app.get("/api/lease", async (req, res)=>{
 app.get("/api/rent", async (req, res)=>{
     try{
         const data = await schema.find({tag: "rent"});
-        //console.log(data)
-        return res.status(200).json(data)
+        
+    const modifiedData = data.map(item =>{
+        return {
+            ...item._doc,
+            short: item.short.slice(0, 101)
+        }
+    })
+        console.log(modifiedData)
+        return res.status(200).json(modifiedData)
     } catch (err){
         console.log("Error occured", err)
         res.status(500).send({message: "An error occurred while processing your request."})
@@ -334,7 +341,7 @@ app.get("/api/rent", async (req, res)=>{
 });
 
 
-//connect to db
+//listenon port
 app.listen(port, ()=>{
     console.log(`App listening on port ${port}`)
 })
