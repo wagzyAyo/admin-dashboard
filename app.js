@@ -301,7 +301,7 @@ app.get("/api/alldata", async (req, res) => {
 
 app.get("/api/sales", async (req, res)=>{
     try{
-        const data = await schema.find({tag: "sale"});
+        const data = (await schema.find({tag: "sale"})).reverse();
         //console.log(data);
         const modifiedData = data.map(item =>{
             return{
@@ -319,7 +319,7 @@ app.get("/api/sales", async (req, res)=>{
 
 app.get("/api/lease", async (req, res)=>{
     try{
-        const data = await schema.find({tag: "lease"});
+        const data = (await schema.find({tag: "lease"})).reverse();
         
         const modifiedData = data.map(item =>{
             return {
@@ -336,7 +336,7 @@ app.get("/api/lease", async (req, res)=>{
 
 app.get("/api/rent", async (req, res)=>{
     try{
-        const data = await schema.find({tag: "rent"});
+        const data = (await schema.find({tag: "rent"})).reverse();
         
     const modifiedData = data.map(item =>{
         return {
@@ -344,7 +344,7 @@ app.get("/api/rent", async (req, res)=>{
             short: item.short.slice(0, 101)
         }
     })
-        console.log(modifiedData)
+        //console.log(modifiedData)
         return res.status(200).json(modifiedData)
     } catch (err){
         console.log("Error occured", err)
