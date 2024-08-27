@@ -174,7 +174,7 @@ app.post("/addpost", async (req, res)=>{
                 size: size,
                 amount: amount,
                 description: description,
-                imageURL: imageURLS
+                imageURL: req.body.imageUrls.split(',').map(url => url.trim())
             }
             const property = await schema.create(newProperty);
             property.save()
