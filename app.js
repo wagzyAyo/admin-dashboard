@@ -113,7 +113,7 @@ app.post('/signup', (req,res)=>{
 
 app.get("/sales", async (req, res)=>{
     try{
-        const data = await schema.find({tag: "sale"});
+        const data = (await schema.find({tag: "sale"})).reverse();
         //console.log(data)
      
         res.render('sales', {Data: data})
@@ -125,7 +125,7 @@ app.get("/sales", async (req, res)=>{
 
 app.get("/lease", async (req, res)=>{
     try{
-        const data = await schema.find({tag: "lease"});
+        const data = (await schema.find({tag: "lease"})).reverse();
         //console.log(data)
         res.render('lease', {Data: data})
     } catch (err){
@@ -136,7 +136,7 @@ app.get("/lease", async (req, res)=>{
 
 app.get("/rent", async (req, res)=>{
     try{
-        const data = await schema.find({tag: "rent"});
+        const data = (await schema.find({tag: "rent"})).reverse();
         //console.log(data)
         res.render('rent', {Data: data})
     } catch (err){
@@ -212,7 +212,7 @@ app.post('/update/:id', async (req, res) => {
     const short = req.body.short;
     const amount = req.body.amount;
     const description = req.body.description;
-    const imageURLS = req.body.imageUrls;
+    const imageURLS = req.body.imageUrls.split(',').map(url => url.trim());
 
     try {
         if (
