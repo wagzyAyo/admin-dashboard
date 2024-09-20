@@ -77,10 +77,9 @@ left: 65%;
 
 .center{
     width: 300px;
-    height: auto;
+    height: 500px;
     border-radius: 30px;
     background-color: aliceblue;
-    min-height: 100vh;
     margin: 0 auto;
     padding: 40px;
 }
